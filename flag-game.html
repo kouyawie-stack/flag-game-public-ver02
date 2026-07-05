@@ -166,6 +166,8 @@
   .warning-line{position:absolute;left:-20%;right:-20%;height:18px;background:repeating-linear-gradient(90deg,#ffd45e 0 22px,#120817 22px 44px);opacity:.52;box-shadow:0 0 16px #ffd45e;animation:warningSweep 1.05s linear infinite}
   .warning-line.one{top:18px}.warning-line.two{bottom:18px;animation-direction:reverse}
   .boss-crack{position:absolute;left:50%;top:8%;width:6px;height:78%;background:#ffd45e;clip-path:polygon(42% 0,100% 17%,58% 17%,92% 35%,45% 35%,82% 56%,35% 56%,70% 80%,20% 80%,44% 100%,0 70%,34% 70%,8% 48%,48% 48%,18% 27%,58% 27%,28% 9%);filter:drop-shadow(0 0 12px #ffd45e);opacity:.8;animation:crackFlash .75s steps(2,end) infinite}
+  .mid-flare{position:absolute;bottom:-18px;width:76px;height:110px;background:radial-gradient(circle at 50% 78%,#fff1a8 0 12%,#ffd45e 13% 28%,#ff8a6b 29% 56%,transparent 57%);clip-path:polygon(50% 0,68% 30%,92% 22%,76% 58%,100% 72%,64% 78%,50% 100%,36% 78%,0 72%,24% 58%,8% 22%,32% 30%);filter:drop-shadow(0 0 18px #ff8a6b);opacity:.85;animation:midFlare .58s ease-in-out infinite alternate}
+  .mid-flare.f1{left:18px}.mid-flare.f2{right:18px;animation-delay:.18s}.mid-flare.f3{left:calc(50% - 38px);animation-delay:.32s}
   .holy-ring{position:absolute;inset:18px;border-radius:50%;border:10px double rgba(255,218,107,.7);box-shadow:0 0 30px rgba(255,218,107,.85),inset 0 0 35px rgba(255,218,107,.22);animation:holySpin 4.5s linear infinite}
   .holy-ray{position:absolute;left:50%;top:50%;width:8px;height:190%;background:linear-gradient(180deg,transparent,rgba(255,241,168,.85),transparent);transform-origin:center center;filter:blur(1px);opacity:.55;animation:holyRay 1.7s ease-in-out infinite alternate}
   .holy-ray.r2{transform:translate(-50%,-50%) rotate(60deg);animation-delay:.2s}.holy-ray.r3{transform:translate(-50%,-50%) rotate(120deg);animation-delay:.4s}
@@ -190,6 +192,7 @@
   @keyframes bossGate{from{filter:brightness(.8);transform:scaleX(.9)}to{filter:brightness(1.3);transform:scaleX(1.04)}}
   @keyframes warningSweep{to{transform:translateX(44px)}}
   @keyframes crackFlash{0%,100%{opacity:.15}50%{opacity:1}}
+  @keyframes midFlare{from{transform:translateY(8px) scale(.86);opacity:.45}to{transform:translateY(-6px) scale(1.12);opacity:.96}}
   @keyframes holySpin{to{transform:rotate(360deg)}}
   @keyframes holyRay{from{opacity:.15}to{opacity:.75}}
   @keyframes finalBolt{0%,100%{opacity:.1}50%{opacity:1}}
@@ -268,7 +271,7 @@
 </div>
 <div class="boss-unlock midboss-unlock hidden" id="midbossUnlock" aria-hidden="true">
   <div class="boss-panel">
-    <div class="boss-effects"><span class="warning-line one"></span><span class="warning-line two"></span><span class="boss-crack"></span></div>
+    <div class="boss-effects"><span class="warning-line one"></span><span class="warning-line two"></span><span class="boss-crack"></span><span class="mid-flare f1"></span><span class="mid-flare f2"></span><span class="mid-flare f3"></span></div>
     <div class="boss-mark">NEXT BOSS UNLOCKED</div>
     <div class="boss-gate"></div>
     <div class="boss-title">超むずかしい<br>出現</div>
@@ -449,6 +452,7 @@ function updateExpertButton(){
 function showExpertUnlockCeremony(){
   const el=document.getElementById('midbossUnlock');
   if(!el)return;
+  stopAll();
   el.classList.remove('hidden');
   el.setAttribute('aria-hidden','false');
   for(let i=0;i<4;i++)setTimeout(popConfetti,i*220);
@@ -466,6 +470,7 @@ function closeExpertUnlockCeremony(){
 function showGodUnlockCeremony(){
   const el=document.getElementById('godbossUnlock');
   if(!el)return;
+  stopAll();
   el.classList.remove('hidden');
   el.setAttribute('aria-hidden','false');
   for(let i=0;i<5;i++)setTimeout(popConfetti,i*240);
@@ -483,6 +488,7 @@ function closeGodUnlockCeremony(){
 function showFinalUnlockCeremony(){
   const el=document.getElementById('bossUnlock');
   if(!el)return;
+  stopAll();
   el.classList.remove('hidden');
   el.setAttribute('aria-hidden','false');
   for(let i=0;i<5;i++)setTimeout(popConfetti,i*260);
@@ -501,7 +507,7 @@ function runDemoUnlockCeremony(){
   let demo='';
   try{demo=new URLSearchParams(location.search).get('demo')||'';}catch(e){}
   if(!demo)return;
-  if(demo==='expert'){
+  if(demo==='expert'||demo==='midboss'){
     expertUnlocked=true;
     updateExpertButton();
     setTimeout(showExpertUnlockCeremony,700);
